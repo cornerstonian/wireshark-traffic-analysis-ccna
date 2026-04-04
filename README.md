@@ -10,6 +10,7 @@ All captures performed on real hardware — Cisco 2600/1700 routers, Catalyst 35
 | # | Protocol | Title | Status |
 |---|---|---|---|
 | 01 | ARP | [ARP Analysis: Live Capture on Physical Cisco Hardware](https://github.com/cornerstonian/wireshark-traffic-analysis-ccna/tree/master/lab-01-arp) | ✅ Complete |
+| 02 | Display Filters | [Display Filters — The Force Multiplier](https://github.com/cornerstonian/wireshark-traffic-analysis-ccna/tree/master/lab-02-display-filters) | ✅ Complete |
 
 ---
 
