@@ -18,9 +18,9 @@ The lab environment isolates Cisco equipment behind a Linksys E2500 buffer route
 
 | Lab | Title | Key Skill | Status |
 |---|---|---|---|
-| 01 | ARP — Address Resolution Protocol | ARP request/reply capture, MAC-to-IP mapping, gratuitous ARP | ✅ Complete |
-| 02 | Display Filters — The Force Multiplier | Protocol isolation, directional filters, logical operators, right-click filter creation | ✅ Complete |
-| 03 | TCP Streams & Cleartext Credential Exposure | TCP stream reassembly, Telnet analysis, ROMMON recovery, interface troubleshooting | ✅ Complete |
+| 01 | [ARP — Address Resolution Protocol](https://github.com/cornerstonian/wireshark-traffic-analysis-ccna/tree/master/lab-01-arp) | ARP request/reply capture, MAC-to-IP mapping, gratuitous ARP | ✅ Complete |
+| 02 | [Display Filters — The Force Multiplier](https://github.com/cornerstonian/wireshark-traffic-analysis-ccna/tree/master/lab-02-display-filters) | Protocol isolation, directional filters, logical operators, right-click filter creation | ✅ Complete |
+| 03 | [TCP Streams & Cleartext Credential Exposure](https://github.com/cornerstonian/wireshark-traffic-analysis-ccna/tree/master/lab-03-tcp-streams-expert-info) | TCP stream reassembly, Telnet analysis, ROMMON recovery, interface troubleshooting | ✅ Complete |
 | 04 | SSH — Encrypted Remote Access | IOS upgrade via TFTP, SSH configuration, encrypted stream comparison | 🔄 In Progress |
 | 05 | Switch Integration & VLANs | Catalyst 3500XL, trunk links, VLAN traffic isolation | 📋 Planned |
 | 06 | Access Control Lists | ACL implementation, traffic filtering, RST packet analysis | 📋 Planned |
