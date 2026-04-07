@@ -174,12 +174,56 @@ Unable to negotiate with 192.168.50.20 port 22: no matching cipher found.
 Their offer: aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc
 ```
 
-**Fix — specify legacy algorithms explicitly:**
+**Fix — specify legacy algorithms explicitly (one-time or scripted use):**
 ```bash
 ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oCiphers=+aes128-cbc admin@192.168.50.20
 ```
 
 > This is a client-side compatibility flag — the encryption is still active. The session is encrypted with AES-128-CBC. The flag tells the Mac's SSH client to accept the older negotiation method, not to disable encryption.
+
+### Permanent Fix — `~/.ssh/config`
+
+The inline flags work but require retyping on every connection. The correct solution is a persistent `~/.ssh/config` entry that applies the legacy algorithm flags automatically for this host.
+
+**Create the config file:**
+
+```bash
+mkdir -p ~/.ssh && cat >> ~/.ssh/config << 'EOF'
+Host 192.168.50.20
+  HostName 192.168.50.20
+  User admin
+  KexAlgorithms +diffie-hellman-group1-sha1
+  HostKeyAlgorithms +ssh-rsa
+  Ciphers +aes128-cbc
+EOF
+chmod 600 ~/.ssh/config
+```
+
+**Verify:**
+
+```bash
+cat ~/.ssh/config
+```
+
+Expected output:
+```
+Host 192.168.50.20
+  HostName 192.168.50.20
+  User admin
+  KexAlgorithms +diffie-hellman-group1-sha1
+  HostKeyAlgorithms +ssh-rsa
+  Ciphers +aes128-cbc
+```
+
+**Connect — no flags required from this point forward:**
+
+```bash
+ssh 192.168.50.20
+```
+
+> `chmod 600` is required — OpenSSH refuses to read a config file with open permissions. This is enforced at the client level and is not configurable.
+
+**From Lab 05 onward, `ssh 192.168.50.20` is the only command needed to access NetOps-1700. The console cable is reserved for ROMMON recovery and Layer 1 failures only.**
 
 ---
 
@@ -192,8 +236,10 @@ ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oCiphers=+aes128-cbc admin@192.
 SSH session initiated:
 
 ```bash
-ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oCiphers=+aes128-cbc admin@192.168.50.20
+ssh 192.168.50.20
 ```
+
+> `~/.ssh/config` handles legacy algorithm negotiation automatically — see macOS SSH Compatibility section.
 
 Commands run during session:
 
@@ -255,7 +301,8 @@ The only plaintext visible is the version banner exchange during the initial SSH
 | SSH encrypts the entire session | Version banners are the only plaintext — everything else is ciphertext |
 | AES-128-CBC is the negotiated cipher | Visible in the SSH handshake packets — strong symmetric encryption |
 | `transport input ssh` blocks Telnet | VTY lines on this device reject Telnet connections entirely |
-| Legacy algorithm flags required on macOS | Modern OpenSSH dropped diffie-hellman-group1-sha1 by default — explicit flag needed for IOS 12.4 compatibility |
+| Legacy algorithm flags required on macOS | Modern OpenSSH dropped diffie-hellman-group1-sha1 by default — explicit flag or `~/.ssh/config` entry needed for IOS 12.4 compatibility |
+| `~/.ssh/config` is the permanent solution | One-time setup eliminates inline flags on every connection — `ssh 192.168.50.20` is sufficient from Lab 05 onward |
 | Privilege 15 eliminates enable prompt | Direct privileged exec on login — no second password required |
 
 ---
@@ -279,7 +326,8 @@ The only plaintext visible is the version banner exchange during the initial SSH
 | SSH encrypts all session data | Credentials, commands, and output — none visible in packet capture |
 | Telnet vs SSH contrast is definitive | Lab 03 TCP stream readable, Lab 04 TCP stream unreadable — same hardware, different protocol |
 | `advsecurityk9` IOS required | Base IOS images cannot generate RSA keys or run SSH |
-| Legacy algorithm compatibility | Modern SSH clients require explicit flags to connect to IOS 12.4 devices |
+| Legacy algorithm compatibility | Modern SSH clients require `~/.ssh/config` entry or explicit flags to connect to IOS 12.4 devices |
+| `~/.ssh/config` is the CI/CD-correct solution | Permanent host config — no inline flags, no retyping, reproducible across sessions |
 | `transport input ssh` is the mitigation | One command replaces Telnet with SSH on VTY lines |
 
 ---
@@ -293,12 +341,25 @@ Lab 05 brings the Catalyst 3500XL switch online — VLAN configuration, trunk li
 ## Commands Reference
 
 ```bash
-# macOS — SSH with legacy algorithm support
+# macOS — SSH (permanent, no flags required after ~/.ssh/config setup)
+ssh 192.168.50.20
+
+# macOS — SSH with inline legacy flags (before ~/.ssh/config, or one-off use)
 ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oCiphers=+aes128-cbc admin@192.168.50.20
+
+# Create ~/.ssh/config entry for permanent legacy algorithm support
+mkdir -p ~/.ssh && cat >> ~/.ssh/config << 'EOF'
+Host 192.168.50.20
+  HostName 192.168.50.20
+  User admin
+  KexAlgorithms +diffie-hellman-group1-sha1
+  HostKeyAlgorithms +ssh-rsa
+  Ciphers +aes128-cbc
+EOF
+chmod 600 ~/.ssh/config
 
 # Verify IP before connecting
 ping -c 3 192.168.50.20
-route get 192.168.50.20
 
 # Wireshark display filter
 tcp.port == 22
