@@ -21,7 +21,7 @@ The lab environment isolates Cisco equipment behind a Linksys E2500 buffer route
 | 01 | [ARP — Address Resolution Protocol](https://github.com/cornerstonian/wireshark-traffic-analysis-ccna/tree/master/lab-01-arp) | ARP request/reply capture, MAC-to-IP mapping, gratuitous ARP | ✅ Complete |
 | 02 | [Display Filters — The Force Multiplier](https://github.com/cornerstonian/wireshark-traffic-analysis-ccna/tree/master/lab-02-display-filters) | Protocol isolation, directional filters, logical operators, right-click filter creation | ✅ Complete |
 | 03 | [TCP Streams & Cleartext Credential Exposure](https://github.com/cornerstonian/wireshark-traffic-analysis-ccna/tree/master/lab-03-tcp-streams-expert-info) | TCP stream reassembly, Telnet analysis, ROMMON recovery, interface troubleshooting | ✅ Complete |
-| 04 | SSH — Encrypted Remote Access | IOS upgrade via TFTP, SSH configuration, encrypted stream comparison | 🔄 In Progress |
+| 04 | [SSH — Encrypted Remote Access](https://github.com/cornerstonian/wireshark-traffic-analysis-ccna/tree/master/lab-04-ssh-encrypted-remote-access) | SSH configuration, RSA key generation, encrypted stream analysis, Telnet vs SSH comparison | ✅ Complete |
 | 05 | Switch Integration & VLANs | Catalyst 3500XL, trunk links, VLAN traffic isolation | 📋 Planned |
 | 06 | Access Control Lists | ACL implementation, traffic filtering, RST packet analysis | 📋 Planned |
 
@@ -36,20 +36,20 @@ Xfinity Gateway
    ↓
 Linksys E2500 (192.168.50.1) — NAT + DHCP + buffer
    ↓
-Cisco 2621 Router — NetOps-R1 (192.168.50.10) — Fa0/1
-   |
-Catalyst 3500XL Switch (planned)
-   |
-Lab Endpoints
+   ├── Cisco 2621 — NetOps-R1 (192.168.50.10) — Fa0/1
+   │   Labs 01–03 — Telnet / cleartext demonstration
+   │
+   └── Cisco 1700 — NetOps-1700 (192.168.50.20) — Fa0
+       Lab 04 — SSH / encrypted remote access
 ```
 
 | Device | Role | IP |
 |---|---|---|
 | MacBook Pro 2015 | Capture station / console management | 192.168.50.147 |
 | Linksys E2500 | Buffer router — isolates lab from home network | 192.168.50.1 |
-| Cisco 2621 (NetOps-R1) | Lab gateway router | 192.168.50.10 |
-| Cisco 1700 | Secondary router — SSH lab candidate | TBD |
-| Catalyst 3500XL | Core lab switch | Planned |
+| Cisco 2621 (NetOps-R1) | Lab gateway — Telnet / cleartext demo | 192.168.50.10 |
+| Cisco 1700 (NetOps-1700) | SSH lab device — advsecurityk9 IOS 12.4(25d) | 192.168.50.20 |
+| Catalyst 3500XL | Core lab switch | 📋 Planned |
 
 ---
 
@@ -60,6 +60,7 @@ Lab Endpoints
 | `lab01-arp-cisco2600.pcapng` | 01 | Full ARP exchange with Cisco 2600 |
 | `lab02-display-filters-practice.pcapng` | 02 | Multi-protocol capture for filter practice |
 | `lab03-telnet-tcp-stream.pcapng` | 03 | Full Telnet session with cleartext credential capture |
+| `lab04-ssh-encrypted-stream.pcapng` | 04 | SSH session showing encrypted stream — no readable credentials |
 
 Capture files stored locally — not committed to repo due to size.
 
@@ -70,7 +71,9 @@ Capture files stored locally — not committed to repo due to size.
 - Live packet capture on physical Cisco hardware
 - Wireshark display filter construction and saved filter libraries
 - TCP stream reassembly and session reconstruction
-- Protocol security analysis (Telnet vs SSH)
+- Protocol security analysis — Telnet cleartext vs SSH encrypted
+- SSH configuration — RSA key generation, VTY hardening, version 2 enforcement
+- macOS OpenSSH legacy algorithm compatibility
 - ROMMON password recovery and configuration register manipulation
 - Interface troubleshooting (Layer 1 / Layer 2 status diagnosis)
 - Remote access configuration (VTY lines, transport input)
@@ -78,4 +81,4 @@ Capture files stored locally — not committed to repo due to size.
 ---
 
 *Lavoisier Cornerstone — [lavoisier.dev](https://lavoisier.dev) | [github.com/cornerstonian](https://github.com/cornerstonian)*
-*Part of the ccna-wireshark-labs project series*
+*Part of the wireshark-traffic-analysis-ccna project series*
